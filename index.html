@@ -1744,10 +1744,12 @@ body.is-account > section:not(#account){display:none}
 .ac-back{display:inline-flex;align-items:center;gap:8px;padding:0;background:none;
   color:var(--w-45);font-size:14px;cursor:pointer;transition:color .22s}
 .ac-back:hover{color:var(--green)}
-.ac-form-h{margin:6px 0 4px;font-size:clamp(22px,2.2vw,32px);line-height:1.05;
-  letter-spacing:-.03em;font-weight:600;color:var(--white)}
+.ac-form-h{margin:6px 0 clamp(18px,2vw,26px);font-size:clamp(22px,2.2vw,32px);
+  line-height:1.05;letter-spacing:-.03em;font-weight:600;color:var(--white)}
+/* линия отделяет шапку заявления от самих вопросов */
 .ac-form-wrap{display:grid;grid-template-columns:minmax(0,1fr) clamp(190px,17vw,240px);
-  gap:clamp(24px,3vw,52px);align-items:start;margin-top:clamp(18px,2vw,26px)}
+  gap:clamp(24px,3vw,52px);align-items:start;
+  padding-top:clamp(20px,2.2vw,30px);border-top:1px solid var(--w-16)}
 /* список шагов */
 .ac-steps{position:sticky;top:calc(var(--head-h) + 16px);display:grid;gap:2px;
   padding:10px;border:1px solid var(--w-08);border-radius:16px;background:var(--coal)}
@@ -1765,11 +1767,13 @@ body.is-account > section:not(#account){display:none}
 .ac-fields{display:grid;gap:clamp(22px,2.4vw,32px);max-width:620px}
 .ac-page{display:none}
 .ac-page.is-on{display:grid;gap:clamp(22px,2.4vw,32px)}
-.ac-page-t{margin:0;font-size:19px;line-height:1.2;letter-spacing:-.02em;
-  font-weight:600;color:var(--white)}
+.ac-page-t{margin:0 0 -8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:var(--green)}
+.ac-page-t b{font-weight:500;color:var(--w-45)}
 .ac-f{display:grid;gap:6px}
+.ac-page > .ac-f + .ac-f{padding-top:clamp(18px,2vw,26px);border-top:1px solid var(--w-08)}
 .ac-f.is-off{opacity:.4;pointer-events:none}
-.ac-q{font-size:17px;line-height:1.35;letter-spacing:-.01em;font-weight:500;color:var(--white)}
+.ac-q{font-size:16.5px;line-height:1.35;letter-spacing:-.01em;font-weight:500;color:var(--white)}
 .ac-q i{font-style:normal;color:var(--green);margin-left:3px}
 .ac-f small{font-size:14px;line-height:1.4;color:var(--w-45)}
 .ac-f input[type=text],.ac-f input[type=date],.ac-f textarea,.ac-f select{
@@ -5159,7 +5163,7 @@ var RTC_STEPS=[
     '<div class="ac-fields">'+
       F.steps.map(function(st,si){
        return '<section class="ac-page'+(si===0?' is-on':'')+'" data-page="'+si+'">'+
-        '<h3 class="ac-page-t">'+esc(st[0])+'</h3>'+
+        '<h3 class="ac-page-t">шаг '+(si+1)+' из '+F.steps.length+' <b>· '+esc(st[0])+'</b></h3>'+
         st[1].map(function(n){ return byName[n]?field(byName[n]):''; }).join('')+
        '</section>';
       }).join('')+
