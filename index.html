@@ -1654,9 +1654,10 @@ body.is-account > section:not(#account){display:none}
 /* тумблер роли — первым в левой колонке, той же кладки, что и вкладки ниже:
    одна карточка, внутри строки. Вложенной рамки нет — она спорила
    с формой активной строки */
-.ac-switch{display:grid;gap:6px;padding:clamp(10px,1vw,14px);
+.ac-switch{display:grid;gap:12px;padding:clamp(12px,1.2vw,16px) clamp(10px,1vw,14px) clamp(10px,1vw,14px);
   border:1px solid var(--w-08);border-radius:var(--r-s);background:var(--coal)}
-.ac-switch .ac-lb{padding:5px 14px 1px}
+/* подпись отодвинута от списка ролей — вплотную она читалась как часть кнопки */
+.ac-switch .ac-lb{padding:0 14px}
 .ac-roles{display:grid;gap:4px}
 .ac-role-b{padding:11px 14px;border-radius:14px;background:transparent;
   color:var(--w-70);font-size:15px;letter-spacing:-.015em;text-align:left;
