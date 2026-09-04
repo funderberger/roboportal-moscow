@@ -293,9 +293,10 @@ section{position:relative}
   display:flex;flex-direction:column;padding:clamp(18px,1.7vw,26px);
   border:1px solid var(--w-08);border-radius:var(--r);background:var(--coal);
   transition:border-color .35s,background .35s}
-/* выбранная карточка заливается фирменным зеленым целиком, текст в ней
-   становится темным. Полупрозрачные варианты не читались как выделение */
-.tgal-card.is-on{border-color:var(--green);background:var(--green)}
+/* выбранная карточка заливается мятным — той же светлой краской, что
+   плитки в блоке выше. Плотный зеленый оставлен плитке каталога в конце
+   ленты, иначе на экране два одинаковых пятна */
+.tgal-card.is-on{border-color:var(--mint);background:var(--mint)}
 .tgal-card.is-on .tgal-t{color:#06110B}
 .tgal-card.is-on .tgal-env{color:rgba(6,17,11,.58)}
 .tgal-card.is-on .tgal-lb{color:rgba(6,17,11,.72)}
