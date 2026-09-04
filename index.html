@@ -3418,7 +3418,7 @@ var TDECK=[
   '<span class="tgal-cta-go" aria-hidden="true">→</span></a></li>';
 
  var cards=[].slice.call(track.children);
- var last=cards.length-1, xs=[], idx=[], stops=0, hold=1, active=-1, ticking=false, flat=false;
+ var last=cards.length-1, xs=[], idx=[], raw=[], stops=0, hold=1, active=-1, ticking=false, flat=false;
  var STEP=34, TAIL=45; /* vh: шаг между остановками и запас в конце, где лента уже стоит */
 
  function ease(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
@@ -3427,7 +3427,7 @@ var TDECK=[
     не тянет: плитка «Выбери своего робота» приходит справа и там остается */
  function measure(){
   var rail=track.parentNode, base=cards[0].offsetLeft;
-  var raw=cards.map(function(c){ return -(c.offsetLeft-base); });
+  raw=cards.map(function(c){ return -(c.offsetLeft-base); });
   var gut=parseFloat(getComputedStyle(rail).paddingLeft)||0;
   var beltW=cards[last].offsetLeft-base+cards[last].offsetWidth;
   var end=rail.clientWidth-gut*2-beltW;
@@ -3437,6 +3437,14 @@ var TDECK=[
    xs.push(end); idx.push(last);
   }
   stops=xs.length-1;
+ }
+ function nearest(x){
+  var best=0, bd=Infinity;
+  for(var i=0;i<raw.length;i++){
+   var d=Math.abs(raw[i]-x);
+   if(d<bd){ bd=d; best=i; }
+  }
+  return best;
  }
  function mark(k){
   if(k===active) return;
@@ -3455,8 +3463,15 @@ var TDECK=[
   if(stops>0){
    var f=p*stops,i=Math.floor(f);
    if(i>stops-1) i=stops-1;
-   x=xs[i]+(xs[i+1]-xs[i])*ease(f-i);
-   mark(idx[Math.round(f)]);
+   var t=ease(f-i);
+   x=xs[i]+(xs[i+1]-xs[i])*t;
+   /* на последнем отрезке лента упирается в правый край, и хвостовые
+      карточки до левого края уже не доходят — там отметку ведем по
+      остатку пути, иначе они никогда не подсвечиваются */
+   if(i===stops-1){
+    var from=nearest(xs[stops-1]);
+    mark(from+Math.round(t*Math.max(0,(last-1)-from)));
+   } else mark(nearest(x));
   } else mark(0);
   track.style.transform='translate3d('+x+'px,0,0)';
  }
