@@ -1685,6 +1685,43 @@ body.is-account > section:not(#account){display:none}
   font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
 .ac-app .ac-app-s i{font-style:normal;color:var(--w-45)}
 
+
+/* форма заявки внутри кабинета */
+.ac-back{display:inline-flex;align-items:center;gap:8px;padding:0;background:none;
+  color:var(--w-45);font-size:14px;cursor:pointer;transition:color .22s}
+.ac-back:hover{color:var(--green)}
+.ac-form-h{margin:6px 0 0;font-size:clamp(22px,2.2vw,32px);line-height:1.05;
+  letter-spacing:-.03em;font-weight:600;color:var(--white)}
+.ac-fset{display:grid;gap:16px;padding:clamp(18px,2vw,28px);border:1px solid var(--w-08);
+  border-radius:var(--r-s);background:var(--coal)}
+.ac-fset.is-off{opacity:.4;pointer-events:none}
+.ac-fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ac-f--wide{grid-column:1/-1}
+.ac-f textarea{min-height:104px}
+.ac-f select{width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--w-16);
+  background:var(--ink);color:var(--white);font:inherit;font-size:15px;cursor:pointer}
+.ac-f select:focus{outline:none;border-color:var(--green)}
+.ac-f small{font-size:13px;line-height:1.4;color:var(--w-45)}
+.ac-f--req > span::after{content:' *';color:var(--green)}
+/* прикрепление файла */
+.ac-file{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:13px 16px;
+  border:1px dashed var(--w-16);border-radius:14px;cursor:pointer;transition:border-color .22s}
+.ac-file:hover{border-color:var(--green)}
+.ac-file input[type=file]{display:none}
+.ac-file b{font-weight:500;font-size:14.5px;color:var(--green)}
+.ac-file i{font-style:normal;font-size:13.5px;color:var(--w-45)}
+.ac-file.is-set{border-style:solid}
+.ac-file.is-set i{color:var(--white)}
+/* галочки */
+.ac-check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;align-items:start;cursor:pointer}
+.ac-check input{width:22px;height:22px;margin:0;accent-color:var(--green);cursor:pointer}
+.ac-check > span{font-size:14.5px;line-height:1.45;color:var(--w-70)}
+.ac-docs{display:grid;gap:10px}
+.ac-submit{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ac-err{margin:0;color:#FF8A7A;font-size:14.5px}
+/* кнопка заявки под блоком поддержки на главной */
+.sup-cta{display:flex;justify-content:center;margin-top:clamp(22px,2.6vw,38px)}
+@media(max-width:760px){ .ac-fgrid{grid-template-columns:1fr} }
 /* форма обращения */
 .ac-form{display:grid;gap:16px;justify-items:start}
 .ac-f{display:grid;gap:8px;width:100%}
@@ -1903,6 +1940,9 @@ body.is-account > section:not(#account){display:none}
   <div class="sup-actions">
     <a href="#finance" class="btn btn-green btn-lg">Узнать больше →</a>
   </div>
+  <div class="sup-cta">
+    <a class="btn btn-green btn-lg" id="supCta" href="#account">Включить робота в реестр →</a>
+  </div>
 </section>
 
 <!-- ============ зачем здесь робот: стопка кейсов ============ -->
@@ -2002,9 +2042,16 @@ body.is-account > section:not(#account){display:none}
 
       <!-- заявки -->
       <div class="ac-pane" data-pane="apps">
-        <div class="ac-counts">
-          <div><b id="acAppsN">0</b><span>заявки</span></div>
-          <div><b id="acDraftN">0</b><span>черновики</span></div>
+       <div id="acAppsView">
+        <div class="ac-row">
+          <div class="ac-counts">
+            <div><b id="acAppsN">0</b><span>заявки</span></div>
+            <div><b id="acDraftN">0</b><span>черновики</span></div>
+          </div>
+          <div class="ac-submit">
+            <button type="button" class="btn btn-ghost" data-newapp="reg" data-for="producer">Включить робота в реестр</button>
+            <button type="button" class="btn btn-ghost" data-newapp="comp" data-for="consumer">Заявка на компенсацию</button>
+          </div>
         </div>
         <div class="ac-apps" id="acApps"></div>
         <div class="ac-card" id="acAppsEmpty">
@@ -2024,8 +2071,13 @@ body.is-account > section:not(#account){display:none}
             <li><b>Договор и оплата</b><em>документы</em><span>Договор поставки, акт и платежные документы на покупку</span></li>
             <li><b>Заявка от юрлица</b><em>реквизиты</em><span>Подается от организации — реквизиты подставятся из профиля</span></li>
           </ol>
-          <div class="ac-cta"><a href="#finance" class="btn btn-green">Открыть поддержку →</a></div>
+          <div class="ac-cta">
+            <button type="button" class="btn btn-green" data-newapp="reg" data-for="producer">Включить робота в реестр →</button>
+            <button type="button" class="btn btn-green" data-newapp="comp" data-for="consumer">Подать на компенсацию →</button>
+          </div>
         </div>
+       </div>
+       <div id="acFormView" hidden></div>
       </div>
 
       <!-- роботы -->
@@ -4838,21 +4890,258 @@ var RTC_STEPS=[
  /* заявки */
  var box=document.getElementById('acApps'), empty=document.getElementById('acAppsEmpty');
  function drawApps(){
-  var n=st.apps.length;
-  document.getElementById('acAppsN').textContent=n;
-  document.getElementById('acDraftN').textContent=0;
-  document.getElementById('acTabN').textContent=n;
-  empty.hidden=n>0;
+  var all=st.apps.length, dr=st.apps.filter(function(a){return a.draft;}).length;
+  document.getElementById('acAppsN').textContent=all-dr;
+  document.getElementById('acDraftN').textContent=dr;
+  document.getElementById('acTabN').textContent=all;
+  empty.hidden=all>0;
   box.innerHTML=st.apps.map(function(a){
    return '<article class="ac-app">'+
     '<b>'+esc(a.topic)+'</b>'+
     '<span class="ac-app-n nolow">'+esc(a.no)+'</span>'+
     '<p>'+esc(a.text)+'</p>'+
-    '<span class="ac-app-s">'+esc(a.status)+'<i>'+esc(a.date)+'</i></span>'+
+    '<span class="ac-app-s">'+esc(a.status)+
+      (a.route?'<i>'+esc(a.route)+'</i>':'')+'<i>'+esc(a.date)+'</i></span>'+
    '</article>';
   }).join('');
  }
  drawApps();
+
+
+ /* кнопка под блоком поддержки на главной: производителю — реестр,
+    заказчику — компенсация. Ведет в кабинет с открытой формой */
+ (function(){
+  var cta=document.getElementById('supCta'), tabs=document.querySelectorAll('.sup-tab');
+  if(!cta||!tabs.length) return;
+  function sync(){
+   var buy=document.querySelector('.sup-tab.is-on');
+   var isBuy=buy&&buy.getAttribute('data-aud')==='buy';
+   cta.textContent=(isBuy?'Подать на компенсацию':'Включить робота в реестр')+' \u2192';
+   cta.setAttribute('data-newapp',isBuy?'comp':'reg');
+  }
+  for(var i=0;i<tabs.length;i++) tabs[i].addEventListener('click',function(){ setTimeout(sync,0); });
+  sync();
+ })();
+
+ /* ---- формы заявок ----
+    Реестровая форма — по приложению 1 к Порядку формирования Реестра:
+    двенадцать полей и справочник типов. Пункты 10 и 11 связаны: если
+    приложена выписка из РРПП, блок подтверждения производства не нужен.
+    Форма компенсации предварительная — порядка предоставления грантов
+    на руках нет, состав полей рабочий. */
+ var CATS=[
+  ['Уличные роботы',['коммунальные роботы','роботы-патрульные и охранные',
+    'логистические роботы (доставщики)','строительные роботы и ликвидаторы чрезвычайных ситуаций']],
+  ['Внутриобъектные роботы',['роботы-уборщики','складские роботы','роботы-доставщики','роботы-консьержи']],
+  ['Биоморфные роботы',['антропоморфные роботы (любого назначения)','бионические роботы (любого назначения)']],
+  ['Транспортные роботы',['беспилотные автомобили','беспилотные автобусы','беспилотные грузовики',
+    'беспилотное метро','беспилотный трамвай']],
+  ['Беспилотные авиационные системы (БАС)',[
+    'БАС самолетного типа для мониторинга и перевозки грузов',
+    'БАС вертолетного типа для мониторинга и перевозки грузов',
+    'БАС коптерного типа для мониторинга, перевозки грузов, выполнения специализированных отраслевых задач']],
+  ['Водные роботы',['подводные исследовательские суда','подводные поисковые и научные суда',
+    'подводные разведывательные аппараты','надводные поисковые и научные суда',
+    'надводные безэкипажные грузовые катера']],
+  ['Иные роботы',['иные роботы']]
+ ];
+ var PROOF=[
+  'Опросный лист производителя (приложение 2 к Порядку)',
+  'Справка о перечне основного производственного оборудования и оснастки',
+  'Справка о персонале: производственный и конструкторский состав',
+  'Конструкторская документация на заявленную модель',
+  'Технологическая документация на заявленную модель',
+  'Таблица основных технологических операций (приложение 3 к Порядку)',
+  'Сведения о модели для демонстрации при выездной проверке'
+ ];
+ var FORMS={
+  reg:{title:'Заявление на включение робота в реестр',
+   note:'Поля — по приложению 1 к Порядку формирования и ведения Реестра робототехнического оборудования Москвы. Решение принимается не позднее 25 рабочих дней со дня регистрации заявления.',
+   fields:[
+    {n:'orgFull',t:'Полное наименование производителя оборудования',req:1,wide:1},
+    {n:'orgShort',t:'Сокращенное наименование производителя оборудования',req:1},
+    {n:'inn',t:'ИНН производителя оборудования',req:1},
+    {n:'model',t:'Наименование и модель робототехнического оборудования',req:1,wide:1,
+     hint:'Полное наименование изделия и обозначение модели по технической документации'},
+    {n:'cat',t:'Тип и категория оборудования',req:1,wide:1,kind:'cats'},
+    {n:'place',t:'Место производства',req:1,wide:1,
+     hint:'Место производства или крупноузловой сборки в России: субъект, город, производственная площадка'},
+    {n:'specs',t:'Основные технические характеристики',req:1,wide:1,kind:'text',
+     hint:'Грузоподъемность, радиус действия, тип управления и другие ключевые параметры'},
+    {n:'passport',t:'Копия паспорта робота и (или) технической документации',req:1,wide:1,kind:'file'},
+    {n:'certs',t:'Сертификаты соответствия, заключения экспертиз',wide:1,kind:'file',hint:'При наличии'},
+    {n:'rrpp',t:'Выписка из реестра российской промышленной продукции',wide:1,kind:'rrpp',
+     hint:'По постановлению Правительства РФ от 17.07.2015 № 719'},
+    {n:'proof',t:'Документы для подтверждения производства на территории РФ',wide:1,kind:'proof'},
+    {n:'pd',t:'Согласие на обработку персональных данных',req:1,wide:1,kind:'check',
+     hint:'Даю согласие Фонду «Московский инновационный кластер» на обработку персональных данных по 152-ФЗ'}
+   ]},
+  comp:{title:'Заявка на компенсацию затрат на покупку робота',
+   note:'Компенсируется покупка робота, включенного в реестр Москвы. Состав полей предварительный — порядок предоставления грантов еще не опубликован.',
+   fields:[
+    {n:'orgFull',t:'Наименование организации-заказчика',req:1,wide:1},
+    {n:'inn',t:'ИНН заказчика',req:1},
+    {n:'robot',t:'Робот из реестра',req:1,kind:'robots'},
+    {n:'maker',t:'Производитель робота',req:1},
+    {n:'seller',t:'Поставщик по договору',req:1},
+    {n:'dogovor',t:'Номер и дата договора поставки',req:1},
+    {n:'sum',t:'Стоимость покупки, ₽',req:1},
+    {n:'act',t:'Дата акта приема-передачи',req:1,kind:'date'},
+    {n:'where',t:'Где робот будет работать',req:1,wide:1,kind:'text',
+     hint:'Адрес площадки и задача, которую робот закрывает'},
+    {n:'docs',t:'Договор, акт и платежные документы',req:1,wide:1,kind:'file'},
+    {n:'pd',t:'Согласие на обработку персональных данных',req:1,wide:1,kind:'check',
+     hint:'Даю согласие оператору поддержки на обработку персональных данных по 152-ФЗ'}
+   ]}
+ };
+ var ROUTE=[
+  ['Регистрация заявления','незамедлительно'],
+  ['Проверка комплектности','до 3 р. д.'],
+  ['Проверка и оценка робота','до 20 р. д.'],
+  ['Решение','не позднее 25 р. д.']
+ ];
+
+ var formView=document.getElementById('acFormView'), appsView=document.getElementById('acAppsView');
+ function field(f){
+  var lb='<span>'+esc(f.t)+'</span>';
+  var cls='ac-f'+(f.wide?' ac-f--wide':'')+(f.req?' ac-f--req':'');
+  var dn=' data-n="'+f.n+'"';
+  var hint=f.hint?'<small>'+esc(f.hint)+'</small>':'';
+  if(f.kind==='check')
+   return '<label class="ac-check ac-f--wide"'+dn+'><input type="checkbox"'+(f.req?' required':'')+'>'+
+    '<span><b style="color:var(--white);font-weight:500">'+esc(f.t)+'</b><br>'+esc(f.hint||'')+'</span></label>';
+  if(f.kind==='file')
+   return '<div class="'+cls+'"'+dn+'>'+lb+
+    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+hint+'</div>';
+  if(f.kind==='rrpp')
+   return '<div class="'+cls+'"'+dn+'>'+lb+
+    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+
+    '<label class="ac-check" style="margin-top:4px"><input type="checkbox" data-rrpp-none>'+
+    '<span>Не имеется</span></label>'+hint+'</div>';
+  if(f.kind==='proof')
+   return '<div class="ac-fset is-off ac-f--wide" data-proof'+dn+'>'+
+    '<p class="ac-lb">'+esc(f.t)+'</p>'+
+    '<p class="ac-note" style="margin:0">Заполняется, только если по выписке из РРПП выбрано «Не имеется».</p>'+
+    '<div class="ac-docs">'+PROOF.map(function(d){
+      return '<label class="ac-check"><input type="checkbox"><span>'+esc(d)+'</span></label>'; }).join('')+
+    '</div></div>';
+  if(f.kind==='cats')
+   return '<div class="'+cls+'"'+dn+'>'+lb+'<select'+(f.req?' required':'')+'><option value="">— выберите —</option>'+
+    CATS.map(function(g){ return '<optgroup label="'+esc(g[0])+'">'+
+      g[1].map(function(o){ return '<option>'+esc(o)+'</option>'; }).join('')+'</optgroup>'; }).join('')+
+    '</select>'+hint+'</div>';
+  if(f.kind==='robots'){
+   var opts=(typeof ROBOTS!=='undefined'?ROBOTS:[]).map(function(r){
+    return '<option value="'+esc(r.name)+'" data-maker="'+esc(r.maker||'')+'">'+esc(r.name)+'</option>'; }).join('');
+   return '<div class="'+cls+'"'+dn+'>'+lb+'<select data-robot'+(f.req?' required':'')+
+    '><option value="">— выберите —</option>'+opts+'</select>'+hint+'</div>';
+  }
+  if(f.kind==='text')
+   return '<div class="'+cls+'"'+dn+'>'+lb+'<textarea'+(f.req?' required':'')+'></textarea>'+hint+'</div>';
+  return '<div class="'+cls+'"'+dn+'>'+lb+'<input type="'+(f.kind==='date'?'date':'text')+'"'+(f.req?' required':'')+'>'+hint+'</div>';
+ }
+ function openForm(kind){
+  var F=FORMS[kind]; if(!F) return;
+  formView.innerHTML='<button type="button" class="ac-back">← к заявкам</button>'+
+   '<h2 class="ac-form-h">'+esc(F.title)+'</h2>'+
+   '<p class="ac-note">'+esc(F.note)+'</p>'+
+   '<form class="ac-fset" style="margin-top:18px" novalidate>'+
+    '<div class="ac-fgrid">'+F.fields.map(field).join('')+'</div>'+
+    '<div class="ac-submit"><button type="submit" class="btn btn-green">Подать заявку →</button>'+
+     '<button type="button" class="btn btn-ghost" data-draft>Сохранить черновик</button></div>'+
+    '<p class="ac-err" hidden></p>'+
+   '</form>';
+  /* подставляем то, что уже известно о заявителе */
+  function fld(name){ return formView.querySelector('[data-n="'+name+'"]'); }
+  function inp(name){ var b=fld(name); return b&&b.querySelector('input,select,textarea'); }
+  if(st.org){
+   var eo=inp('orgFull'), ei=inp('inn');
+   if(eo&&!eo.value) eo.value=st.org.name;
+   if(ei&&!ei.value) ei.value=st.org.inn;
+  }
+  /* робот из реестра подставляет своего производителя */
+  var rob=formView.querySelector('[data-robot]');
+  if(rob) rob.addEventListener('change',function(){
+   var op=rob.options[rob.selectedIndex], mk=op&&op.getAttribute('data-maker');
+   var em=inp('maker');
+   if(em&&mk) em.value=mk;
+  });
+  /* пункт 10 включает и выключает пункт 11 */
+  var none=formView.querySelector('[data-rrpp-none]'), proof=formView.querySelector('[data-proof]');
+  if(none&&proof) none.addEventListener('change',function(){
+   proof.classList.toggle('is-off',!none.checked);
+  });
+  /* имя выбранного файла */
+  formView.querySelectorAll('.ac-file input[type=file]').forEach(function(inp){
+   inp.addEventListener('change',function(){
+    var box=inp.closest('.ac-file'), n=inp.files.length;
+    box.classList.toggle('is-set',n>0);
+    box.querySelector('i').textContent=n===0?'файл не выбран':
+      (n===1?inp.files[0].name:n+' файла');
+   });
+  });
+  formView.querySelector('.ac-back').addEventListener('click',closeForm);
+  formView.querySelector('[data-draft]').addEventListener('click',function(){ submit(kind,true); });
+  formView.querySelector('form').addEventListener('submit',function(e){ e.preventDefault(); submit(kind,false); });
+  appsView.hidden=true; formView.hidden=false;
+  formView.scrollIntoView({block:'start'});
+ }
+ function closeForm(){ formView.hidden=true; formView.innerHTML=''; appsView.hidden=false; }
+ function collect(kind){
+  var F=FORMS[kind], out={}, bad=null;
+  F.fields.forEach(function(f){
+   var box=formView.querySelector('[data-n="'+f.n+'"]'); if(!box) return;
+   if(f.kind==='check'){ out[f.n]=box.querySelector('input').checked; return; }
+   if(f.kind==='proof'){
+    out[f.n]=[].slice.call(box.querySelectorAll('input:checked')).length; return; }
+   if(f.kind==='file'||f.kind==='rrpp'){
+    var fi=box.querySelector('input[type=file]');
+    out[f.n]=fi&&fi.files.length?[].map.call(fi.files,function(x){return x.name;}).join(', '):'';
+    if(f.kind==='rrpp'&&box.querySelector('[data-rrpp-none]').checked) out[f.n]='Не имеется';
+    return; }
+   var el=box.querySelector('input,select,textarea');
+   out[f.n]=el?el.value.trim():'';
+  });
+  F.fields.forEach(function(f){
+   if(!f.req||bad) return;
+   var v=out[f.n];
+   if(f.kind==='check'? v!==true : !v) bad=f.t;
+  });
+  return {data:out,bad:bad};
+ }
+ function submit(kind,draft){
+  var r=collect(kind), err=formView.querySelector('.ac-err');
+  if(!draft&&r.bad){ err.textContent='Заполните поле: '+r.bad; err.hidden=false; return; }
+  err.hidden=true;
+  var d=new Date();
+  function p2(x){ return (x<10?'0':'')+x; }
+  st.apps.unshift({
+   kind:kind,
+   no:(kind==='reg'?'РРО':'КМП')+'-'+d.getFullYear()+'-'+p2(d.getMonth()+1)+p2(d.getDate())+'-'+(st.apps.length+1),
+   topic:FORMS[kind].title,
+   text:kind==='reg'
+     ? (r.data.model||'Модель не указана')+' · '+(r.data.cat||'категория не выбрана')
+     : (r.data.robot||'Робот не выбран')+' · '+(r.data.sum?r.data.sum+' ₽':'сумма не указана'),
+   status:draft?'черновик':'зарегистрировано',
+   draft:!!draft,
+   date:p2(d.getDate())+'.'+p2(d.getMonth()+1)+'.'+d.getFullYear(),
+   route:draft?'':ROUTE[0][1]
+  });
+  save(st); drawApps(); closeForm(); show('apps');
+ }
+ document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-newapp]');
+  if(!b) return;
+  var kind=b.getAttribute('data-newapp');
+  /* заявку на компенсацию подает заказчик, в реестр — производитель:
+     роль переключаем сами, иначе форма откроется в чужом кабинете */
+  var want=kind==='comp'?'Заказчик':'Производитель';
+  if((st.role||'Производитель')!==want&&(st.role||'Производитель')!=='Интегратор'){
+   st.role=want; save(st); drawRole();
+  }
+  show('apps');
+  openForm(kind);
+ });
 
  /* обращение в поддержку */
  var form=document.getElementById('acHelp'), ok=document.getElementById('acHelpOk');
