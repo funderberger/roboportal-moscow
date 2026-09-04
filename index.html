@@ -108,6 +108,8 @@ section{position:relative}
 .btn-ghost{border:1px solid var(--w-16);color:var(--white)}
 .btn-ghost:hover{border-color:var(--green);color:var(--green)}
 .btn-dark{background:var(--ink);color:var(--white);border:1px solid var(--w-16)}
+/* display:inline-flex у .btn перебивал [hidden] — скрытые кнопки шага оставались видны */
+.btn[hidden]{display:none}
 .btn-dark:hover{border-color:var(--green);color:var(--green)}
 .btn-dark:hover{transform:translateY(-2px)}
 .burger{display:none;margin-left:auto;width:44px;height:44px;border-radius:999px;border:1px solid var(--w-16);
@@ -1734,33 +1736,56 @@ body.is-account > section:not(#account){display:none}
 .ac-app .ac-app-s i{font-style:normal;color:var(--w-45)}
 
 
-/* форма заявки: каждый вопрос — своя карточка, как в гугл-формах.
-   Подпись обычным текстом, под ней пояснение, ниже поле */
+/* форма заявки. По исследованиям форм: одна колонка, подпись сверху
+   вплотную к полю, пояснение между ними, рамок вокруг вопросов нет,
+   ширина поля намекает на длину ответа. Двенадцать полей разбиты на
+   шаги — справа список шагов, он же занимает колонку, которая иначе
+   пустовала */
 .ac-back{display:inline-flex;align-items:center;gap:8px;padding:0;background:none;
   color:var(--w-45);font-size:14px;cursor:pointer;transition:color .22s}
 .ac-back:hover{color:var(--green)}
-.ac-form-h{margin:6px 0 0;font-size:clamp(22px,2.2vw,32px);line-height:1.05;
+.ac-form-h{margin:6px 0 4px;font-size:clamp(22px,2.2vw,32px);line-height:1.05;
   letter-spacing:-.03em;font-weight:600;color:var(--white)}
-.ac-fset{display:grid;gap:12px;padding:0;border:0;background:none;max-width:760px}
-.ac-fgrid{display:grid;grid-template-columns:1fr;gap:12px}
-.ac-f{display:grid;gap:10px;padding:clamp(18px,1.8vw,24px);
-  border:1px solid var(--w-08);border-radius:16px;background:var(--coal)}
-.ac-f.is-off{opacity:.45;pointer-events:none}
-.ac-q{font-size:16.5px;line-height:1.35;letter-spacing:-.01em;color:var(--white)}
-.ac-q i{font-style:normal;color:var(--green);margin-left:4px}
-.ac-f small{margin-top:-4px;font-size:14px;line-height:1.4;color:var(--w-45)}
+.ac-form-wrap{display:grid;grid-template-columns:minmax(0,1fr) clamp(190px,17vw,240px);
+  gap:clamp(24px,3vw,52px);align-items:start;margin-top:clamp(18px,2vw,26px)}
+/* список шагов */
+.ac-steps{position:sticky;top:calc(var(--head-h) + 16px);display:grid;gap:2px;
+  padding:10px;border:1px solid var(--w-08);border-radius:16px;background:var(--coal)}
+.ac-step{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:baseline;
+  padding:10px 12px;border-radius:11px;background:none;text-align:left;color:var(--w-45);
+  font-size:14.5px;line-height:1.3;cursor:pointer;transition:background .2s,color .2s}
+.ac-step:hover{color:var(--white);background:var(--w-08)}
+.ac-step.is-on{background:rgba(66,227,131,.13);color:var(--white)}
+.ac-step.is-done{color:var(--w-70)}
+.ac-step i{font-style:normal;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11.5px;letter-spacing:.06em;color:inherit;opacity:.6}
+.ac-step.is-done i{color:var(--green);opacity:1}
+.ac-step:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+/* поля */
+.ac-fields{display:grid;gap:clamp(22px,2.4vw,32px);max-width:620px}
+.ac-page{display:none}
+.ac-page.is-on{display:grid;gap:clamp(22px,2.4vw,32px)}
+.ac-page-t{margin:0;font-size:19px;line-height:1.2;letter-spacing:-.02em;
+  font-weight:600;color:var(--white)}
+.ac-f{display:grid;gap:6px}
+.ac-f.is-off{opacity:.4;pointer-events:none}
+.ac-q{font-size:17px;line-height:1.35;letter-spacing:-.01em;font-weight:500;color:var(--white)}
+.ac-q i{font-style:normal;color:var(--green);margin-left:3px}
+.ac-f small{font-size:14px;line-height:1.4;color:var(--w-45)}
 .ac-f input[type=text],.ac-f input[type=date],.ac-f textarea,.ac-f select{
-  width:100%;padding:12px 14px;border:0;border-bottom:1px solid var(--w-16);
+  width:100%;margin-top:4px;padding:11px 0;border:0;border-bottom:1px solid var(--w-16);
   border-radius:0;background:transparent;color:var(--white);font:inherit;font-size:16px;
   transition:border-color .2s}
-.ac-f textarea{min-height:96px;resize:vertical;border:1px solid var(--w-16);border-radius:12px}
-.ac-f select{cursor:pointer}
+.ac-f--sm input,.ac-f--sm select{max-width:240px}
+.ac-f textarea{min-height:92px;resize:vertical;padding:11px 14px;
+  border:1px solid var(--w-16);border-radius:12px}
+.ac-f select{cursor:pointer;padding-right:20px}
 .ac-f select option,.ac-f select optgroup{background:var(--coal);color:var(--white)}
 .ac-f input:focus,.ac-f textarea:focus,.ac-f select:focus{outline:none;border-color:var(--green)}
-.ac-f input::placeholder,.ac-f textarea::placeholder{color:var(--w-28,rgba(255,255,255,.3))}
-/* прикрепление файла */
-.ac-file{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:13px 16px;
-  border:1px dashed var(--w-16);border-radius:12px;cursor:pointer;transition:border-color .2s}
+/* файл */
+.ac-file{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px;
+  padding:12px 16px;border:1px dashed var(--w-16);border-radius:12px;
+  cursor:pointer;transition:border-color .2s}
 .ac-file:hover{border-color:var(--green)}
 .ac-file input[type=file]{display:none}
 .ac-file b{font-weight:500;font-size:15px;color:var(--green)}
@@ -1769,16 +1794,20 @@ body.is-account > section:not(#account){display:none}
 .ac-file.is-set i{color:var(--white)}
 /* галочки */
 .ac-check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;align-items:start;cursor:pointer}
-.ac-check--tight{margin-top:2px}
 .ac-check input{width:22px;height:22px;margin:0;accent-color:var(--green);cursor:pointer}
 .ac-check > span{display:grid;gap:4px}
 .ac-check b{font-size:16px;font-weight:400;line-height:1.35;color:var(--white)}
 .ac-check em{font-style:normal;font-size:14px;line-height:1.4;color:var(--w-45)}
-.ac-docs{display:grid;gap:14px;margin-top:2px}
-.ac-submit{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
-.ac-err{margin:0;color:#FF8A7A;font-size:15px}
-/* кнопка заявки под блоком поддержки на главной */
-.sup-cta{display:flex;justify-content:center;margin-top:clamp(22px,2.6vw,38px)}
+.ac-docs{display:grid;gap:16px;margin-top:8px}
+.ac-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-top:clamp(10px,1.4vw,18px);padding-top:clamp(18px,2vw,26px);
+  border-top:1px solid var(--w-08)}
+.ac-err{margin:0;flex-basis:100%;color:#FF8A7A;font-size:15px}
+@media(max-width:900px){
+  .ac-form-wrap{grid-template-columns:1fr}
+  .ac-steps{position:static;grid-auto-flow:column;grid-auto-columns:1fr;overflow:auto}
+  .ac-step{grid-template-columns:1fr;gap:2px;justify-items:center;text-align:center;font-size:13px}
+}
 /* форма обращения — та же кладка, что у заявок: карточка на вопрос,
    подпись обычным текстом. Правила держим внутри .ac-form, иначе они
    перебивали форму заявки — шли позже в таблице стилей */
@@ -5008,11 +5037,15 @@ var RTC_STEPS=[
  ];
  var FORMS={
   reg:{title:'Заявление на включение робота в реестр',
+   steps:[['Производитель',['orgFull','orgShort','inn']],
+          ['Оборудование',['model','cat','place','specs']],
+          ['Документы',['passport','certs','rrpp','proof']],
+          ['Подтверждение',['pd']]],
    note:'Поля — по приложению 1 к Порядку формирования и ведения Реестра робототехнического оборудования Москвы. Решение принимается не позднее 25 рабочих дней со дня регистрации заявления.',
    fields:[
     {n:'orgFull',t:'Полное наименование производителя оборудования',req:1,wide:1},
     {n:'orgShort',t:'Сокращенное наименование производителя оборудования',req:1},
-    {n:'inn',t:'ИНН производителя оборудования',req:1},
+    {n:'inn',t:'ИНН производителя оборудования',req:1,w:'sm'},
     {n:'model',t:'Наименование и модель робототехнического оборудования',req:1,wide:1,
      hint:'Полное наименование изделия и обозначение модели по технической документации'},
     {n:'cat',t:'Тип и категория оборудования',req:1,wide:1,kind:'cats'},
@@ -5029,16 +5062,19 @@ var RTC_STEPS=[
      hint:'Даю согласие Фонду «Московский инновационный кластер» на обработку персональных данных по 152-ФЗ'}
    ]},
   comp:{title:'Заявка на компенсацию затрат на покупку робота',
+   steps:[['Заказчик',['orgFull','inn']],
+          ['Покупка',['robot','maker','seller','dogovor','sum','act','where']],
+          ['Документы',['docs','pd']]],
    note:'Компенсируется покупка робота, включенного в реестр Москвы. Состав полей предварительный — порядок предоставления грантов еще не опубликован.',
    fields:[
     {n:'orgFull',t:'Наименование организации-заказчика',req:1,wide:1},
-    {n:'inn',t:'ИНН заказчика',req:1},
+    {n:'inn',t:'ИНН заказчика',req:1,w:'sm'},
     {n:'robot',t:'Робот из реестра',req:1,kind:'robots'},
     {n:'maker',t:'Производитель робота',req:1},
     {n:'seller',t:'Поставщик по договору',req:1},
     {n:'dogovor',t:'Номер и дата договора поставки',req:1},
-    {n:'sum',t:'Стоимость покупки, ₽',req:1},
-    {n:'act',t:'Дата акта приема-передачи',req:1,kind:'date'},
+    {n:'sum',t:'Стоимость покупки, ₽',req:1,w:'sm'},
+    {n:'act',t:'Дата акта приема-передачи',req:1,kind:'date',w:'sm'},
     {n:'where',t:'Где робот будет работать',req:1,wide:1,kind:'text',
      hint:'Адрес площадки и задача, которую робот закрывает'},
     {n:'docs',t:'Договор, акт и платежные документы',req:1,wide:1,kind:'file'},
@@ -5066,6 +5102,7 @@ var RTC_STEPS=[
   var lb='<span class="ac-q">'+esc(f.t)+(f.req?'<i>*</i>':'')+'</span>';
   var hint=f.hint?'<small>'+esc(f.hint)+'</small>':'';
   var dn=' data-n="'+f.n+'"';
+  var cls='ac-f'+(f.w==='sm'?' ac-f--sm':'');
   var head=lb+hint;
 
   if(f.kind==='check')
@@ -5081,17 +5118,17 @@ var RTC_STEPS=[
     '</div></div>';
 
   if(f.kind==='file')
-   return '<div class="ac-f"'+dn+'>'+head+
+   return '<div class="'+cls+'"'+dn+'>'+head+
     '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label></div>';
 
   if(f.kind==='rrpp')
-   return '<div class="ac-f"'+dn+'>'+head+
+   return '<div class="'+cls+'"'+dn+'>'+head+
     '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+
     '<label class="ac-check ac-check--tight"><input type="checkbox" data-rrpp-none>'+
     '<span><b>Не имеется</b></span></label></div>';
 
   if(f.kind==='cats')
-   return '<div class="ac-f"'+dn+'>'+head+'<select'+(f.req?' required':'')+
+   return '<div class="'+cls+'"'+dn+'>'+head+'<select'+(f.req?' required':'')+
     '><option value="">Выберите значение</option>'+
     CATS.map(function(g){ return '<optgroup label="'+esc(g[0])+'">'+
       g[1].map(function(o){ return '<option>'+esc(o)+'</option>'; }).join('')+'</optgroup>'; }).join('')+
@@ -5100,28 +5137,45 @@ var RTC_STEPS=[
   if(f.kind==='robots'){
    var opts=(typeof ROBOTS!=='undefined'?ROBOTS:[]).map(function(r){
     return '<option value="'+esc(r.name)+'" data-maker="'+esc(r.maker||'')+'">'+esc(r.name)+'</option>'; }).join('');
-   return '<div class="ac-f"'+dn+'>'+head+'<select data-robot'+(f.req?' required':'')+
+   return '<div class="'+cls+'"'+dn+'>'+head+'<select data-robot'+(f.req?' required':'')+
     '><option value="">Выберите значение</option>'+opts+'</select></div>';
   }
 
   if(f.kind==='text')
-   return '<div class="ac-f"'+dn+'>'+head+'<textarea'+(f.req?' required':'')+'></textarea></div>';
+   return '<div class="'+cls+'"'+dn+'>'+head+'<textarea'+(f.req?' required':'')+'></textarea></div>';
 
-  return '<div class="ac-f"'+dn+'>'+head+
+  return '<div class="'+cls+'"'+dn+'>'+head+
    '<input type="'+(f.kind==='date'?'date':'text')+'"'+(f.req?' required':'')+'></div>';
  }
+ var curStep=0, curKind=null;
  function openForm(kind){
   var F=FORMS[kind]; if(!F) return;
+  curKind=kind; curStep=0;
+  var byName={}; F.fields.forEach(function(f){ byName[f.n]=f; });
   formView.innerHTML='<button type="button" class="ac-back">← к заявкам</button>'+
    '<h2 class="ac-form-h">'+esc(F.title)+'</h2>'+
-
-   '<form class="ac-fset" style="margin-top:18px" novalidate>'+
-    '<div class="ac-fgrid">'+F.fields.map(field).join('')+'</div>'+
-    '<div class="ac-submit"><button type="submit" class="btn btn-green">Подать заявку →</button>'+
-     '<button type="button" class="btn btn-ghost" data-draft>Сохранить черновик</button></div>'+
-    '<p class="ac-err" hidden></p>'+
+   '<form class="ac-form-wrap" novalidate>'+
+    '<div class="ac-fields">'+
+      F.steps.map(function(st,si){
+       return '<section class="ac-page'+(si===0?' is-on':'')+'" data-page="'+si+'">'+
+        '<h3 class="ac-page-t">'+esc(st[0])+'</h3>'+
+        st[1].map(function(n){ return byName[n]?field(byName[n]):''; }).join('')+
+       '</section>';
+      }).join('')+
+      '<div class="ac-nav">'+
+        '<button type="button" class="btn btn-ghost" data-prev hidden>Назад</button>'+
+        '<button type="button" class="btn btn-green" data-next>Далее →</button>'+
+        '<button type="submit" class="btn btn-green" data-send hidden>Подать заявку →</button>'+
+        '<button type="button" class="btn btn-ghost" data-draft>Сохранить черновик</button>'+
+        '<p class="ac-err" hidden></p>'+
+      '</div>'+
+    '</div>'+
+    '<nav class="ac-steps">'+F.steps.map(function(st,si){
+      return '<button type="button" class="ac-step'+(si===0?' is-on':'')+'" data-go="'+si+'">'+
+       '<i>'+(si+1)+'</i><span>'+esc(st[0])+'</span></button>';
+    }).join('')+'</nav>'+
    '</form>';
-  /* подставляем то, что уже известно о заявителе */
+
   function fld(name){ return formView.querySelector('[data-n="'+name+'"]'); }
   function inp(name){ var b=fld(name); return b&&b.querySelector('input,select,textarea'); }
   if(st.org){
@@ -5129,31 +5183,78 @@ var RTC_STEPS=[
    if(eo&&!eo.value) eo.value=st.org.name;
    if(ei&&!ei.value) ei.value=st.org.inn;
   }
-  /* робот из реестра подставляет своего производителя */
   var rob=formView.querySelector('[data-robot]');
   if(rob) rob.addEventListener('change',function(){
    var op=rob.options[rob.selectedIndex], mk=op&&op.getAttribute('data-maker');
-   var em=inp('maker');
-   if(em&&mk) em.value=mk;
+   var em=inp('maker'); if(em&&mk) em.value=mk;
   });
-  /* пункт 10 включает и выключает пункт 11 */
   var none=formView.querySelector('[data-rrpp-none]'), proof=formView.querySelector('[data-proof]');
   if(none&&proof) none.addEventListener('change',function(){
    proof.classList.toggle('is-off',!none.checked);
   });
-  /* имя выбранного файла */
-  formView.querySelectorAll('.ac-file input[type=file]').forEach(function(inp){
-   inp.addEventListener('change',function(){
-    var box=inp.closest('.ac-file'), n=inp.files.length;
+  formView.querySelectorAll('.ac-file input[type=file]').forEach(function(fi){
+   fi.addEventListener('change',function(){
+    var box=fi.closest('.ac-file'), n=fi.files.length;
     box.classList.toggle('is-set',n>0);
     box.querySelector('i').textContent=n===0?'файл не выбран':
-      (n===1?inp.files[0].name:n+' файла');
+      (n===1?fi.files[0].name:n+' файла');
    });
   });
+
   formView.querySelector('.ac-back').addEventListener('click',closeForm);
   formView.querySelector('[data-draft]').addEventListener('click',function(){ submit(kind,true); });
+  formView.querySelector('[data-next]').addEventListener('click',function(){ step(curStep+1); });
+  formView.querySelector('[data-prev]').addEventListener('click',function(){ step(curStep-1,true); });
+  formView.querySelectorAll('[data-go]').forEach(function(b){
+   b.addEventListener('click',function(){ step(+b.getAttribute('data-go'),true); });
+  });
   formView.querySelector('form').addEventListener('submit',function(e){ e.preventDefault(); submit(kind,false); });
+
   appsView.hidden=true; formView.hidden=false;
+  paint();
+ }
+
+ /* проверяем только поля текущего шага — иначе человек упирается в ошибку
+    о поле, которого еще не видел */
+ function stepBad(si){
+  var F=FORMS[curKind], names=F.steps[si][1], bad=null;
+  names.forEach(function(n){
+   if(bad) return;
+   var f=F.fields.filter(function(x){ return x.n===n; })[0];
+   if(!f||!f.req) return;
+   var box=formView.querySelector('[data-n="'+n+'"]');
+   if(!box) return;
+   if(f.kind==='check'){ if(!box.querySelector('input').checked) bad=f.t; return; }
+   if(f.kind==='file'||f.kind==='rrpp'){
+    var fi=box.querySelector('input[type=file]');
+    var none=box.querySelector('[data-rrpp-none]');
+    if(!(fi&&fi.files.length)&&!(none&&none.checked)) bad=f.t;
+    return; }
+   var el=box.querySelector('input,select,textarea');
+   if(el&&!el.value.trim()) bad=f.t;
+  });
+  return bad;
+ }
+ function paint(){
+  var F=FORMS[curKind], last=F.steps.length-1;
+  formView.querySelectorAll('.ac-page').forEach(function(p,i){ p.classList.toggle('is-on',i===curStep); });
+  formView.querySelectorAll('.ac-step').forEach(function(b,i){
+   b.classList.toggle('is-on',i===curStep);
+   b.classList.toggle('is-done',i<curStep);
+  });
+  formView.querySelector('[data-prev]').hidden=curStep===0;
+  formView.querySelector('[data-next]').hidden=curStep===last;
+  formView.querySelector('[data-send]').hidden=curStep!==last;
+ }
+ function step(to,skip){
+  var F=FORMS[curKind];
+  if(to<0||to>F.steps.length-1) return;
+  var err=formView.querySelector('.ac-err');
+  if(!skip&&to>curStep){
+   var bad=stepBad(curStep);
+   if(bad){ err.textContent='Заполните поле: '+bad; err.hidden=false; return; }
+  }
+  err.hidden=true; curStep=to; paint();
   formView.scrollIntoView({block:'start'});
  }
  function closeForm(){ formView.hidden=true; formView.innerHTML=''; appsView.hidden=false; }
