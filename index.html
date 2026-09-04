@@ -1354,11 +1354,14 @@ dialog#taskDlg::backdrop,dialog#finDlg::backdrop,dialog#anDlg::backdrop,dialog#c
    про роботов. Боковые поля уже есть у секции, здесь только отступ сверху */
 /* реестр — вход производителя: подводка объясняет порядок, кнопка стоит
    над списком мер, до вкладок «я произвожу / я заказчик» */
-/* кнопка равняется по нижней строке подводки: по центру она висела
-   между двумя строками текста и не совпадала ни с одной */
-.sup-reg{display:flex;align-items:flex-end;justify-content:space-between;
-  gap:clamp(16px,2.4vw,32px);flex-wrap:wrap;margin-bottom:clamp(20px,2.4vw,30px)}
+/* подводка про порядок — отдельной строкой под заголовком */
+.sup-reg{margin-bottom:clamp(16px,1.8vw,24px)}
 .sup-reg .lead{margin:0;max-width:46ch}
+/* строка над карточками: слева вкладки аудитории, справа вход в реестр.
+   Кнопка стоит вплотную к карточкам, а не висит у заголовка */
+.sup-bar{display:flex;align-items:center;justify-content:space-between;
+  gap:clamp(16px,2.4vw,32px);flex-wrap:wrap;margin-bottom:18px}
+.sup-bar .sup-tabs{margin-bottom:0}
 .sup-actions{display:flex;align-items:center;justify-content:flex-end;
   gap:clamp(16px,2.4vw,36px);flex-wrap:wrap;margin-top:clamp(26px,3vw,40px)}
 .sup-list{border-top:1px solid var(--w-16)}
@@ -1870,11 +1873,13 @@ body.is-account > section:not(#account){display:none}
   </div>
   <div class="sup-reg">
     <p class="lead">Сначала робот попадает в реестр — после этого поддержка становится доступна</p>
-    <a class="btn btn-green" id="supCta" href="#account" data-newapp="reg">Включить робота в реестр →</a>
   </div>
-  <div class="sup-tabs" role="tablist" aria-label="кому адресованы меры">
-    <button type="button" class="sup-tab is-on" role="tab" data-aud="make" aria-selected="true">Я произвожу</button>
-    <button type="button" class="sup-tab" role="tab" data-aud="buy" aria-selected="false">Я заказчик</button>
+  <div class="sup-bar">
+    <div class="sup-tabs" role="tablist" aria-label="кому адресованы меры">
+      <button type="button" class="sup-tab is-on" role="tab" data-aud="make" aria-selected="true">Я произвожу</button>
+      <button type="button" class="sup-tab" role="tab" data-aud="buy" aria-selected="false">Я заказчик</button>
+    </div>
+    <a class="btn btn-green" id="supCta" href="#account" data-newapp="reg">Включить робота в реестр →</a>
   </div>
   <div class="sup-grid" id="supGrid" data-aud="make">
     <article class="sup-card" data-aud="buy">
