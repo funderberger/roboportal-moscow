@@ -287,12 +287,15 @@ section{position:relative}
 .tgal-rail{overflow:hidden;min-width:0;padding-left:var(--gut)}
 .tgal-track{display:flex;align-items:stretch;gap:clamp(14px,1.6vw,22px);
   width:max-content;margin:0;padding:0;list-style:none;will-change:transform}
+/* карточки не гасим: активную отмечает рамка в цвете, остальные читаются
+   полностью — затемненные выглядели выключенными */
 .tgal-card{flex:0 0 auto;width:clamp(300px,30vw,420px);cursor:pointer;
   display:flex;flex-direction:column;padding:clamp(18px,1.7vw,26px);
   border:1px solid var(--w-08);border-radius:var(--r);background:var(--coal);
-  opacity:.45;transition:opacity .45s cubic-bezier(.2,.7,.3,1),
-    border-color .35s,background .35s}
-.tgal-card.is-on{opacity:1;border-color:var(--green);background:var(--ink)}
+  transition:border-color .35s,background .35s}
+.tgal-card.is-on{border-color:var(--green);background:var(--ink)}
+.tgal-card:hover{border-color:var(--w-16)}
+.tgal-card.is-on:hover{border-color:var(--green)}
 .tgal-t{margin:0;font-size:clamp(20px,1.8vw,27px);line-height:1.06;letter-spacing:-.03em;
   font-weight:600;color:var(--white)}
 .tgal-env{margin:10px 0 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -1833,6 +1836,11 @@ body.is-account > section:not(#account){display:none}
 .ac-check input:checked::after{content:'';width:10px;height:5px;
   border:2px solid #06110B;border-top:0;border-right:0;
   transform:rotate(-45deg) translate(0,-2px)}
+/* выбор из двух ответов — круглые, чтобы читались как взаимоисключающие */
+.ac-check input[type=radio]{border-radius:999px}
+.ac-check input[type=radio]:checked::after{width:8px;height:8px;border:0;border-radius:999px;
+  background:#06110B;transform:none}
+.ac-pick{display:grid;gap:14px;margin-top:10px}
 .ac-check input:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 .ac-check > span{display:grid;gap:4px}
 .ac-check b{font-size:16px;font-weight:400;line-height:1.3;color:var(--white)}
@@ -5095,8 +5103,7 @@ var RTC_STEPS=[
   reg:{title:'Заявление на включение робота в реестр',
    steps:[['Производитель',['orgFull','orgShort','inn']],
           ['Оборудование',['model','cat','place','specs']],
-          ['Документы',['passport','certs','rrpp','proof']],
-          ['Подтверждение',['pd']]],
+          ['Документы',['passport','certs','rrpp','proof','pd']]],
    note:'Поля — по приложению 1 к Порядку формирования и ведения Реестра робототехнического оборудования Москвы. Решение принимается не позднее 25 рабочих дней со дня регистрации заявления.',
    fields:[
     {n:'orgFull',t:'Полное наименование производителя оборудования',req:1,wide:1},
@@ -5166,9 +5173,9 @@ var RTC_STEPS=[
     '<span><b>'+esc(f.t)+(f.req?' *':'')+'</b>'+(f.hint?'<em>'+esc(f.hint)+'</em>':'')+'</span></label></div>';
 
   if(f.kind==='proof')
-   return '<div class="ac-f is-off" data-proof'+dn+'>'+
+   return '<div class="ac-f" data-proof'+dn+' hidden>'+
     '<span class="ac-q">'+esc(f.t)+'</span>'+
-    '<small>Заполняется, только если по выписке из РРПП выбрано «Не имеется».</small>'+
+    '<small>Все документы по Порядку — отметьте те, что приложите</small>'+
     '<div class="ac-docs">'+PROOF.map(function(d){
       return '<label class="ac-check"><input type="checkbox"><span><b>'+esc(d)+'</b></span></label>'; }).join('')+
     '</div></div>';
@@ -5179,9 +5186,14 @@ var RTC_STEPS=[
 
   if(f.kind==='rrpp')
    return '<div class="'+cls+'"'+dn+'>'+head+
-    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+
-    '<label class="ac-check ac-check--tight"><input type="checkbox" data-rrpp-none>'+
-    '<span><b>Не имеется</b></span></label></div>';
+    '<div class="ac-pick">'+
+     '<label class="ac-check"><input type="radio" name="rrpp" value="yes">'+
+      '<span><b>Выписка есть</b><em>Приложу документ</em></span></label>'+
+     '<label class="ac-check"><input type="radio" name="rrpp" value="no" data-rrpp-none>'+
+      '<span><b>Не имеется</b><em>Приложу документы, подтверждающие производство в России</em></span></label>'+
+    '</div>'+
+    '<label class="ac-file" data-rrpp-file hidden><input type="file" multiple>'+
+     '<b>прикрепить</b><i>файл не выбран</i></label></div>';
 
   if(f.kind==='cats')
    return '<div class="'+cls+'"'+dn+'>'+head+'<select'+(f.req?' required':'')+
@@ -5244,9 +5256,14 @@ var RTC_STEPS=[
    var op=rob.options[rob.selectedIndex], mk=op&&op.getAttribute('data-maker');
    var em=inp('maker'); if(em&&mk) em.value=mk;
   });
-  var none=formView.querySelector('[data-rrpp-none]'), proof=formView.querySelector('[data-proof]');
-  if(none&&proof) none.addEventListener('change',function(){
-   proof.classList.toggle('is-off',!none.checked);
+  var proof=formView.querySelector('[data-proof]'),
+      rrppFile=formView.querySelector('[data-rrpp-file]');
+  formView.querySelectorAll('input[name="rrpp"]').forEach(function(r){
+   r.addEventListener('change',function(){
+    var no=r.value==='no';
+    if(proof) proof.hidden=!no;
+    if(rrppFile) rrppFile.hidden=no;
+   });
   });
   formView.querySelectorAll('.ac-file input[type=file]').forEach(function(fi){
    fi.addEventListener('change',function(){
@@ -5281,10 +5298,17 @@ var RTC_STEPS=[
    var box=formView.querySelector('[data-n="'+n+'"]');
    if(!box) return;
    if(f.kind==='check'){ if(!box.querySelector('input').checked) bad=f.t; return; }
-   if(f.kind==='file'||f.kind==='rrpp'){
+   if(f.kind==='rrpp'){
+    var pick=box.querySelector('input[name="rrpp"]:checked');
+    if(!pick){ bad=f.t; return; }
+    if(pick.value==='yes'){
+     var rf=box.querySelector('input[type=file]');
+     if(!(rf&&rf.files.length)) bad=f.t;
+    }
+    return; }
+   if(f.kind==='file'){
     var fi=box.querySelector('input[type=file]');
-    var none=box.querySelector('[data-rrpp-none]');
-    if(!(fi&&fi.files.length)&&!(none&&none.checked)) bad=f.t;
+    if(!(fi&&fi.files.length)) bad=f.t;
     return; }
    var el=box.querySelector('input,select,textarea');
    if(el&&!el.value.trim()) bad=f.t;
@@ -5324,7 +5348,10 @@ var RTC_STEPS=[
    if(f.kind==='file'||f.kind==='rrpp'){
     var fi=box.querySelector('input[type=file]');
     out[f.n]=fi&&fi.files.length?[].map.call(fi.files,function(x){return x.name;}).join(', '):'';
-    if(f.kind==='rrpp'&&box.querySelector('[data-rrpp-none]').checked) out[f.n]='Не имеется';
+    if(f.kind==='rrpp'){
+     var pk=box.querySelector('input[name="rrpp"]:checked');
+     if(pk&&pk.value==='no') out[f.n]='Не имеется';
+    }
     return; }
    var el=box.querySelector('input,select,textarea');
    out[f.n]=el?el.value.trim():'';
