@@ -107,7 +107,8 @@ section{position:relative}
 .btn-green:hover{background:var(--mint);transform:translateY(-2px)}
 .btn-ghost{border:1px solid var(--w-16);color:var(--white)}
 .btn-ghost:hover{border-color:var(--green);color:var(--green)}
-.btn-dark{background:var(--ink);color:var(--white)}
+.btn-dark{background:var(--ink);color:var(--white);border:1px solid var(--w-16)}
+.btn-dark:hover{border-color:var(--green);color:var(--green)}
 .btn-dark:hover{transform:translateY(-2px)}
 .btn-lg{padding:18px 34px;font-size:17px}
 .burger{display:none;margin-left:auto;width:44px;height:44px;border-radius:999px;border:1px solid var(--w-16);
@@ -1719,8 +1720,6 @@ body.is-account > section:not(#account){display:none}
 .ac-docs{display:grid;gap:10px}
 .ac-submit{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .ac-err{margin:0;color:#FF8A7A;font-size:14.5px}
-/* кнопка заявки под блоком поддержки на главной */
-.sup-cta{display:flex;justify-content:center;margin-top:clamp(22px,2.6vw,38px)}
 @media(max-width:760px){ .ac-fgrid{grid-template-columns:1fr} }
 /* форма обращения */
 .ac-form{display:grid;gap:16px;justify-items:start}
@@ -1867,6 +1866,10 @@ body.is-account > section:not(#account){display:none}
   <div class="sup-head">
     <h2 class="h1 sec-h">Поддержка<br>под ваши задачи</h2>
   </div>
+  <div class="sup-reg">
+    <p class="lead">Сначала робот попадает в реестр — после этого поддержка становится доступна</p>
+    <a class="btn btn-green" id="supCta" href="#account" data-newapp="reg">Включить робота в реестр →</a>
+  </div>
   <div class="sup-tabs" role="tablist" aria-label="кому адресованы меры">
     <button type="button" class="sup-tab is-on" role="tab" data-aud="make" aria-selected="true">Я произвожу</button>
     <button type="button" class="sup-tab" role="tab" data-aud="buy" aria-selected="false">Я заказчик</button>
@@ -1938,10 +1941,7 @@ body.is-account > section:not(#account){display:none}
     </article>
   </div>
   <div class="sup-actions">
-    <a href="#finance" class="btn btn-green btn-lg">Узнать больше →</a>
-  </div>
-  <div class="sup-cta">
-    <a class="btn btn-green btn-lg" id="supCta" href="#account">Включить робота в реестр →</a>
+    <a href="#finance" class="btn btn-dark btn-lg">Узнать больше →</a>
   </div>
 </section>
 
@@ -4907,21 +4907,6 @@ var RTC_STEPS=[
  }
  drawApps();
 
-
- /* кнопка под блоком поддержки на главной: производителю — реестр,
-    заказчику — компенсация. Ведет в кабинет с открытой формой */
- (function(){
-  var cta=document.getElementById('supCta'), tabs=document.querySelectorAll('.sup-tab');
-  if(!cta||!tabs.length) return;
-  function sync(){
-   var buy=document.querySelector('.sup-tab.is-on');
-   var isBuy=buy&&buy.getAttribute('data-aud')==='buy';
-   cta.textContent=(isBuy?'Подать на компенсацию':'Включить робота в реестр')+' \u2192';
-   cta.setAttribute('data-newapp',isBuy?'comp':'reg');
-  }
-  for(var i=0;i<tabs.length;i++) tabs[i].addEventListener('click',function(){ setTimeout(sync,0); });
-  sync();
- })();
 
  /* ---- формы заявок ----
     Реестровая форма — по приложению 1 к Порядку формирования Реестра:
