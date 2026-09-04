@@ -110,7 +110,6 @@ section{position:relative}
 .btn-dark{background:var(--ink);color:var(--white);border:1px solid var(--w-16)}
 .btn-dark:hover{border-color:var(--green);color:var(--green)}
 .btn-dark:hover{transform:translateY(-2px)}
-.btn-lg{padding:18px 34px;font-size:17px}
 .burger{display:none;margin-left:auto;width:44px;height:44px;border-radius:999px;border:1px solid var(--w-16);
   align-items:center;justify-content:center}
 
@@ -1604,6 +1603,9 @@ body.is-account > section:not(#account){display:none}
 .ac-edit:hover{color:var(--green)}
 .ac-main{display:grid;gap:clamp(16px,1.8vw,26px);min-width:0}
 .ac-pane{display:none;gap:clamp(14px,1.6vw,22px)}
+/* обертка вида «Заявки» — не блок, а такая же сетка: без нее счетчики
+   прилипали к карточке, отступ панели до внутренних блоков не доходил */
+#acAppsView{display:grid;gap:clamp(14px,1.6vw,22px)}
 .ac-pane.is-on{display:grid}
 .ac-card{padding:clamp(18px,2vw,30px);border:1px solid var(--w-08);
   border-radius:var(--r-s);background:var(--coal)}
@@ -1679,6 +1681,9 @@ body.is-account > section:not(#account){display:none}
 .ac-route span{grid-column:2;font-size:14px;line-height:1.4;color:var(--w-45)}
 /* список поданных обращений */
 .ac-apps{display:grid;gap:10px}
+/* пустой список не должен занимать место в сетке — иначе между счетчиками
+   и карточкой набегает двойной отступ */
+.ac-apps:empty{display:none}
 .ac-app{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 18px;
   padding:clamp(16px,1.7vw,22px);border:1px solid var(--w-08);
   border-radius:var(--r-s);background:var(--coal)}
@@ -1814,7 +1819,7 @@ body.is-account > section:not(#account){display:none}
       <div class="hero-bottom">
         <p class="lead">Для тех, кто делает роботов, и тех, кто их внедряет</p>
         <div class="hero-cta is-corner">
-          <a href="#robots" class="btn btn-green btn-lg">Смотреть роботов</a>
+          <a href="#robots" class="btn btn-green">Смотреть роботов</a>
         </div>
       </div>
     </div>
@@ -1948,7 +1953,7 @@ body.is-account > section:not(#account){display:none}
     </article>
   </div>
   <div class="sup-actions">
-    <a href="#finance" class="btn btn-dark btn-lg">Узнать больше →</a>
+    <a href="#finance" class="btn btn-dark">Узнать больше →</a>
   </div>
 </section>
 
@@ -1962,7 +1967,7 @@ body.is-account > section:not(#account){display:none}
     <article class="wshow" id="whyShow"></article>
     <div class="why-side">
       <div class="wlist" id="whyList" role="tablist" aria-label="виды роботов"></div>
-      <a href="#analytics" class="btn btn-green btn-lg why-more">Узнать больше →</a>
+      <a href="#analytics" class="btn btn-green why-more">Узнать больше →</a>
     </div>
    </div>
   </div>
@@ -2050,15 +2055,9 @@ body.is-account > section:not(#account){display:none}
       <!-- заявки -->
       <div class="ac-pane" data-pane="apps">
        <div id="acAppsView">
-        <div class="ac-row">
-          <div class="ac-counts">
-            <div><b id="acAppsN">0</b><span>заявки</span></div>
-            <div><b id="acDraftN">0</b><span>черновики</span></div>
-          </div>
-          <div class="ac-submit">
-            <button type="button" class="btn btn-ghost" data-newapp="reg" data-for="producer">Включить робота в реестр</button>
-            <button type="button" class="btn btn-ghost" data-newapp="comp" data-for="consumer">Заявка на компенсацию</button>
-          </div>
+        <div class="ac-counts">
+          <div><b id="acAppsN">0</b><span>заявки</span></div>
+          <div><b id="acDraftN">0</b><span>черновики</span></div>
         </div>
         <div class="ac-apps" id="acApps"></div>
         <div class="ac-card" id="acAppsEmpty">
@@ -2080,7 +2079,7 @@ body.is-account > section:not(#account){display:none}
           </ol>
           <div class="ac-cta">
             <button type="button" class="btn btn-green" data-newapp="reg" data-for="producer">Включить робота в реестр →</button>
-            <button type="button" class="btn btn-green" data-newapp="comp" data-for="consumer">Подать на компенсацию →</button>
+            <button type="button" class="btn btn-green" data-newapp="comp" data-for="consumer">Заявка на компенсацию →</button>
           </div>
         </div>
        </div>
@@ -2201,7 +2200,7 @@ body.is-account > section:not(#account){display:none}
     <h1 class="fn-title">Готовая инфраструктура<br>для испытаний</h1>
     <p class="lead fn-lead">Проведите испытания робота в реальных условиях, получите подтверждение результатов и подготовьте решение к внедрению у заказчиков</p>
     <div class="tr-cta">
-      <button type="button" class="btn btn-green btn-lg" data-tr-ask>Подать заявку на испытания →</button>
+      <button type="button" class="btn btn-green" data-tr-ask>Подать заявку на испытания →</button>
     </div>
   </div>
 
@@ -2258,7 +2257,7 @@ body.is-account > section:not(#account){display:none}
          width="2560" height="1097" loading="lazy">
     <div class="band-slug">
       <h2 class="h1 sec-h">Поможем дойти<br>до внедрения</h2>
-      <a href="mailto:roboty@cluster.mos.ru?subject=Заявка на подбор робота" class="btn btn-green btn-lg">Оставить заявку →</a>
+      <a href="mailto:roboty@cluster.mos.ru?subject=Заявка на подбор робота" class="btn btn-green">Оставить заявку →</a>
     </div>
   </div>
 </section>
