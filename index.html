@@ -1734,49 +1734,57 @@ body.is-account > section:not(#account){display:none}
 .ac-app .ac-app-s i{font-style:normal;color:var(--w-45)}
 
 
-/* форма заявки внутри кабинета */
+/* форма заявки: каждый вопрос — своя карточка, как в гугл-формах.
+   Подпись обычным текстом, под ней пояснение, ниже поле */
 .ac-back{display:inline-flex;align-items:center;gap:8px;padding:0;background:none;
   color:var(--w-45);font-size:14px;cursor:pointer;transition:color .22s}
 .ac-back:hover{color:var(--green)}
 .ac-form-h{margin:6px 0 0;font-size:clamp(22px,2.2vw,32px);line-height:1.05;
   letter-spacing:-.03em;font-weight:600;color:var(--white)}
-.ac-fset{display:grid;gap:16px;padding:clamp(18px,2vw,28px);border:1px solid var(--w-08);
-  border-radius:var(--r-s);background:var(--coal)}
-.ac-fset.is-off{opacity:.4;pointer-events:none}
-.ac-fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.ac-f--wide{grid-column:1/-1}
-.ac-f textarea{min-height:104px}
-.ac-f select{width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--w-16);
-  background:var(--ink);color:var(--white);font:inherit;font-size:15px;cursor:pointer}
-.ac-f select:focus{outline:none;border-color:var(--green)}
-.ac-f small{font-size:13px;line-height:1.4;color:var(--w-45)}
-.ac-f--req > span::after{content:' *';color:var(--green)}
+.ac-fset{display:grid;gap:12px;padding:0;border:0;background:none;max-width:760px}
+.ac-fgrid{display:grid;grid-template-columns:1fr;gap:12px}
+.ac-f{display:grid;gap:10px;padding:clamp(18px,1.8vw,24px);
+  border:1px solid var(--w-08);border-radius:16px;background:var(--coal)}
+.ac-f.is-off{opacity:.45;pointer-events:none}
+.ac-q{font-size:16.5px;line-height:1.35;letter-spacing:-.01em;color:var(--white)}
+.ac-q i{font-style:normal;color:var(--green);margin-left:4px}
+.ac-f small{margin-top:-4px;font-size:14px;line-height:1.4;color:var(--w-45)}
+.ac-f input[type=text],.ac-f input[type=date],.ac-f textarea,.ac-f select{
+  width:100%;padding:12px 14px;border:0;border-bottom:1px solid var(--w-16);
+  border-radius:0;background:transparent;color:var(--white);font:inherit;font-size:16px;
+  transition:border-color .2s}
+.ac-f textarea{min-height:96px;resize:vertical;border:1px solid var(--w-16);border-radius:12px}
+.ac-f select{cursor:pointer}
+.ac-f select option,.ac-f select optgroup{background:var(--coal);color:var(--white)}
+.ac-f input:focus,.ac-f textarea:focus,.ac-f select:focus{outline:none;border-color:var(--green)}
+.ac-f input::placeholder,.ac-f textarea::placeholder{color:var(--w-28,rgba(255,255,255,.3))}
 /* прикрепление файла */
 .ac-file{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:13px 16px;
-  border:1px dashed var(--w-16);border-radius:14px;cursor:pointer;transition:border-color .22s}
+  border:1px dashed var(--w-16);border-radius:12px;cursor:pointer;transition:border-color .2s}
 .ac-file:hover{border-color:var(--green)}
 .ac-file input[type=file]{display:none}
-.ac-file b{font-weight:500;font-size:14.5px;color:var(--green)}
-.ac-file i{font-style:normal;font-size:13.5px;color:var(--w-45)}
+.ac-file b{font-weight:500;font-size:15px;color:var(--green)}
+.ac-file i{font-style:normal;font-size:14px;color:var(--w-45)}
 .ac-file.is-set{border-style:solid}
 .ac-file.is-set i{color:var(--white)}
 /* галочки */
 .ac-check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;align-items:start;cursor:pointer}
+.ac-check--tight{margin-top:2px}
 .ac-check input{width:22px;height:22px;margin:0;accent-color:var(--green);cursor:pointer}
-.ac-check > span{font-size:14.5px;line-height:1.45;color:var(--w-70)}
-.ac-docs{display:grid;gap:10px}
-.ac-submit{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.ac-err{margin:0;color:#FF8A7A;font-size:14.5px}
-@media(max-width:760px){ .ac-fgrid{grid-template-columns:1fr} }
-/* форма обращения */
-.ac-form{display:grid;gap:16px;justify-items:start}
-.ac-f{display:grid;gap:8px;width:100%}
-.ac-f > span{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--w-45)}
-.ac-f input,.ac-f textarea{width:100%;padding:13px 16px;border-radius:14px;
-  border:1px solid var(--w-16);background:var(--ink);color:var(--white);
-  font:inherit;font-size:15px;resize:vertical}
-.ac-f input:focus,.ac-f textarea:focus{outline:none;border-color:var(--green)}
+.ac-check > span{display:grid;gap:4px}
+.ac-check b{font-size:16px;font-weight:400;line-height:1.35;color:var(--white)}
+.ac-check em{font-style:normal;font-size:14px;line-height:1.4;color:var(--w-45)}
+.ac-docs{display:grid;gap:14px;margin-top:2px}
+.ac-submit{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
+.ac-err{margin:0;color:#FF8A7A;font-size:15px}
+/* кнопка заявки под блоком поддержки на главной */
+.sup-cta{display:flex;justify-content:center;margin-top:clamp(22px,2.6vw,38px)}
+/* форма обращения — та же кладка, что у заявок: карточка на вопрос,
+   подпись обычным текстом. Правила держим внутри .ac-form, иначе они
+   перебивали форму заявки — шли позже в таблице стилей */
+.ac-form{display:grid;gap:12px;justify-items:stretch;max-width:760px}
+.ac-form .ac-f > span{font-family:inherit;font-size:16.5px;line-height:1.35;
+  letter-spacing:-.01em;text-transform:none;color:var(--white)}
 .ac-ok{margin:0;color:var(--green);font-size:14.5px}
 @media(max-width:900px){
   .ac-layout{grid-template-columns:1fr}
@@ -5052,43 +5060,55 @@ var RTC_STEPS=[
  ];
 
  var formView=document.getElementById('acFormView'), appsView=document.getElementById('acAppsView');
+ /* карточка вопроса: подпись обычным текстом, под ней пояснение, ниже поле.
+    Раньше подписи были моноширинные капсом в разрядку — читать тяжело */
  function field(f){
-  var lb='<span>'+esc(f.t)+'</span>';
-  var cls='ac-f'+(f.wide?' ac-f--wide':'')+(f.req?' ac-f--req':'');
-  var dn=' data-n="'+f.n+'"';
+  var lb='<span class="ac-q">'+esc(f.t)+(f.req?'<i>*</i>':'')+'</span>';
   var hint=f.hint?'<small>'+esc(f.hint)+'</small>':'';
+  var dn=' data-n="'+f.n+'"';
+  var head=lb+hint;
+
   if(f.kind==='check')
-   return '<label class="ac-check ac-f--wide"'+dn+'><input type="checkbox"'+(f.req?' required':'')+'>'+
-    '<span><b style="color:var(--white);font-weight:500">'+esc(f.t)+'</b><br>'+esc(f.hint||'')+'</span></label>';
-  if(f.kind==='file')
-   return '<div class="'+cls+'"'+dn+'>'+lb+
-    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+hint+'</div>';
-  if(f.kind==='rrpp')
-   return '<div class="'+cls+'"'+dn+'>'+lb+
-    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+
-    '<label class="ac-check" style="margin-top:4px"><input type="checkbox" data-rrpp-none>'+
-    '<span>Не имеется</span></label>'+hint+'</div>';
+   return '<div class="ac-f"'+dn+'><label class="ac-check"><input type="checkbox"'+(f.req?' required':'')+'>'+
+    '<span><b>'+esc(f.t)+(f.req?' *':'')+'</b>'+(f.hint?'<em>'+esc(f.hint)+'</em>':'')+'</span></label></div>';
+
   if(f.kind==='proof')
-   return '<div class="ac-fset is-off ac-f--wide" data-proof'+dn+'>'+
-    '<p class="ac-lb">'+esc(f.t)+'</p>'+
-    '<p class="ac-note" style="margin:0">Заполняется, только если по выписке из РРПП выбрано «Не имеется».</p>'+
+   return '<div class="ac-f is-off" data-proof'+dn+'>'+
+    '<span class="ac-q">'+esc(f.t)+'</span>'+
+    '<small>Заполняется, только если по выписке из РРПП выбрано «Не имеется».</small>'+
     '<div class="ac-docs">'+PROOF.map(function(d){
-      return '<label class="ac-check"><input type="checkbox"><span>'+esc(d)+'</span></label>'; }).join('')+
+      return '<label class="ac-check"><input type="checkbox"><span><b>'+esc(d)+'</b></span></label>'; }).join('')+
     '</div></div>';
+
+  if(f.kind==='file')
+   return '<div class="ac-f"'+dn+'>'+head+
+    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label></div>';
+
+  if(f.kind==='rrpp')
+   return '<div class="ac-f"'+dn+'>'+head+
+    '<label class="ac-file"><input type="file" multiple><b>прикрепить</b><i>файл не выбран</i></label>'+
+    '<label class="ac-check ac-check--tight"><input type="checkbox" data-rrpp-none>'+
+    '<span><b>Не имеется</b></span></label></div>';
+
   if(f.kind==='cats')
-   return '<div class="'+cls+'"'+dn+'>'+lb+'<select'+(f.req?' required':'')+'><option value="">— выберите —</option>'+
+   return '<div class="ac-f"'+dn+'>'+head+'<select'+(f.req?' required':'')+
+    '><option value="">Выберите значение</option>'+
     CATS.map(function(g){ return '<optgroup label="'+esc(g[0])+'">'+
       g[1].map(function(o){ return '<option>'+esc(o)+'</option>'; }).join('')+'</optgroup>'; }).join('')+
-    '</select>'+hint+'</div>';
+    '</select></div>';
+
   if(f.kind==='robots'){
    var opts=(typeof ROBOTS!=='undefined'?ROBOTS:[]).map(function(r){
     return '<option value="'+esc(r.name)+'" data-maker="'+esc(r.maker||'')+'">'+esc(r.name)+'</option>'; }).join('');
-   return '<div class="'+cls+'"'+dn+'>'+lb+'<select data-robot'+(f.req?' required':'')+
-    '><option value="">— выберите —</option>'+opts+'</select>'+hint+'</div>';
+   return '<div class="ac-f"'+dn+'>'+head+'<select data-robot'+(f.req?' required':'')+
+    '><option value="">Выберите значение</option>'+opts+'</select></div>';
   }
+
   if(f.kind==='text')
-   return '<div class="'+cls+'"'+dn+'>'+lb+'<textarea'+(f.req?' required':'')+'></textarea>'+hint+'</div>';
-  return '<div class="'+cls+'"'+dn+'>'+lb+'<input type="'+(f.kind==='date'?'date':'text')+'"'+(f.req?' required':'')+'>'+hint+'</div>';
+   return '<div class="ac-f"'+dn+'>'+head+'<textarea'+(f.req?' required':'')+'></textarea></div>';
+
+  return '<div class="ac-f"'+dn+'>'+head+
+   '<input type="'+(f.kind==='date'?'date':'text')+'"'+(f.req?' required':'')+'></div>';
  }
  function openForm(kind){
   var F=FORMS[kind]; if(!F) return;
