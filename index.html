@@ -3012,6 +3012,13 @@ var openWork=null,openModelCard=null;
  if(box&&typeof IntersectionObserver==='function'){
   new IntersectionObserver(function(en){
    en.forEach(function(e){
+    if(e.isIntersecting){
+     /* блок доехал до экрана — подгружаем все ролики заранее, иначе при
+        переключении среды несколько секунд виден только постер */
+     Array.prototype.forEach.call(shots,function(sh){
+      if(sh.tagName==='VIDEO'&&sh.preload!=='auto') sh.preload='auto';
+     });
+    }
     if(e.isIntersecting) pick(cur);
     else Array.prototype.forEach.call(shots,function(sh){
      if(sh.tagName==='VIDEO') sh.pause();
