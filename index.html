@@ -1354,7 +1354,9 @@ dialog#taskDlg::backdrop,dialog#finDlg::backdrop,dialog#anDlg::backdrop,dialog#c
    про роботов. Боковые поля уже есть у секции, здесь только отступ сверху */
 /* реестр — вход производителя: подводка объясняет порядок, кнопка стоит
    над списком мер, до вкладок «я произвожу / я заказчик» */
-.sup-reg{display:flex;align-items:center;justify-content:space-between;
+/* кнопка равняется по нижней строке подводки: по центру она висела
+   между двумя строками текста и не совпадала ни с одной */
+.sup-reg{display:flex;align-items:flex-end;justify-content:space-between;
   gap:clamp(16px,2.4vw,32px);flex-wrap:wrap;margin-bottom:clamp(20px,2.4vw,30px)}
 .sup-reg .lead{margin:0;max-width:46ch}
 .sup-actions{display:flex;align-items:center;justify-content:flex-end;
