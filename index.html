@@ -293,16 +293,15 @@ section{position:relative}
   display:flex;flex-direction:column;padding:clamp(18px,1.7vw,26px);
   border:1px solid var(--w-08);border-radius:var(--r);background:var(--coal);
   transition:border-color .35s,background .35s}
-/* выбранная карточка в цвете. Заливка — прозрачный слой фирменного
-   зеленого поверх темной подложки: тон тот же, что у акцента, поэтому
-   не грязнит. Плотный зеленый оставлен плитке «Выбери своего робота»,
-   а светлые снимки роботов на темном фоне не пропадают */
-.tgal-card.is-on{border-color:var(--green);
-  background:linear-gradient(rgba(66,227,131,.20),rgba(66,227,131,.20)),var(--ink)}
-.tgal-card.is-on .tgal-env{color:rgba(255,255,255,.62)}
-.tgal-card.is-on .tgal-lb{color:var(--mint)}
-.tgal-card.is-on .tgal-list li{border-top-color:rgba(255,255,255,.20)}
-.tgal-card.is-on .tgal-list em{color:rgba(255,255,255,.62)}
+/* выбранная карточка заливается фирменным зеленым целиком, текст в ней
+   становится темным. Полупрозрачные варианты не читались как выделение */
+.tgal-card.is-on{border-color:var(--green);background:var(--green)}
+.tgal-card.is-on .tgal-t{color:#06110B}
+.tgal-card.is-on .tgal-env{color:rgba(6,17,11,.58)}
+.tgal-card.is-on .tgal-lb{color:rgba(6,17,11,.72)}
+.tgal-card.is-on .tgal-list li{border-top-color:rgba(6,17,11,.20)}
+.tgal-card.is-on .tgal-list b{color:#06110B}
+.tgal-card.is-on .tgal-list em{color:rgba(6,17,11,.62)}
 .tgal-card:hover{border-color:var(--w-16)}
 .tgal-card.is-on:hover{border-color:var(--green)}
 .tgal-t{margin:0;font-size:clamp(20px,1.8vw,27px);line-height:1.06;letter-spacing:-.03em;
