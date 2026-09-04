@@ -1672,9 +1672,13 @@ body.is-account > section:not(#account){display:none}
   letter-spacing:-.03em;font-weight:600;color:var(--white)}
 /* каталог заявок: плашка сверху, под ней виды заявок строками в две
    колонки — по образцу меню i.moscow, без рамок и плашек */
-.ac-banner{display:grid;gap:8px;padding:clamp(18px,2vw,28px);
+.ac-banner{display:flex;align-items:center;justify-content:space-between;
+  gap:clamp(20px,3vw,48px);padding:clamp(18px,2vw,28px);overflow:hidden;
   border:1px solid rgba(66,227,131,.28);border-radius:var(--r-s);
   background:linear-gradient(120deg,rgba(66,227,131,.13),rgba(66,227,131,.03) 62%)}
+.ac-banner-txt{display:grid;gap:8px;min-width:0}
+.ac-banner-art{flex:none;width:clamp(104px,11vw,152px);height:auto}
+@media(max-width:640px){ .ac-banner-art{display:none} }
 .ac-banner-t{margin:0;font-size:clamp(20px,2vw,28px);line-height:1.05;
   letter-spacing:-.03em;font-weight:600;color:var(--white)}
 .ac-banner-d{margin:0;max-width:62ch;font-size:14.5px;line-height:1.45;color:var(--w-70)}
@@ -2095,9 +2099,22 @@ body.is-account > section:not(#account){display:none}
         <div class="ac-apps" id="acApps"></div>
         <div id="acAppsEmpty">
           <div class="ac-banner">
-            <p class="ac-lb">что можно подать</p>
-            <p class="ac-banner-t">Заявки портала</p>
-            <p class="ac-banner-d">Любая поданная заявка появится выше — с номером, статусом и сроком рассмотрения.</p>
+            <div class="ac-banner-txt">
+              <p class="ac-banner-t">Заявки портала</p>
+              <p class="ac-banner-d">Любая поданная заявка появится выше — с номером, статусом и сроком рассмотрения.</p>
+            </div>
+            <svg class="ac-banner-art" viewBox="0 0 160 120" aria-hidden="true" focusable="false">
+              <rect x="14" y="10" width="86" height="104" rx="10" fill="#141917" stroke="rgba(255,255,255,.14)"/>
+              <rect x="28" y="26" width="46" height="6" rx="3" fill="var(--green)" opacity=".85"/>
+              <rect x="28" y="42" width="58" height="5" rx="2.5" fill="rgba(255,255,255,.24)"/>
+              <rect x="28" y="55" width="44" height="5" rx="2.5" fill="rgba(255,255,255,.24)"/>
+              <rect x="28" y="68" width="52" height="5" rx="2.5" fill="rgba(255,255,255,.16)"/>
+              <rect x="28" y="81" width="34" height="5" rx="2.5" fill="rgba(255,255,255,.16)"/>
+              <line x1="96" y1="96" x2="126" y2="118" stroke="var(--green)" stroke-width="9" stroke-linecap="round"/>
+              <circle cx="94" cy="72" r="34" fill="rgba(66,227,131,.10)" stroke="var(--green)" stroke-width="6"/>
+              <path d="M82 72l8 9 16-19" fill="none" stroke="var(--green)" stroke-width="6"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
           <div class="ac-services">
             <button type="button" class="ac-svc" data-newapp="reg">
@@ -5077,11 +5094,7 @@ var RTC_STEPS=[
   var F=FORMS[kind]; if(!F) return;
   formView.innerHTML='<button type="button" class="ac-back">← к заявкам</button>'+
    '<h2 class="ac-form-h">'+esc(F.title)+'</h2>'+
-   '<p class="ac-note">'+esc(F.note)+'</p>'+
-   (kind==='reg'?'<ol class="ac-route" style="margin-top:20px">'+
-     ROUTE_FULL.map(function(r){
-      return '<li><b>'+esc(r[0])+'</b><em>'+esc(r[1])+'</em><span>'+esc(r[2])+'</span></li>'; }).join('')+
-    '</ol>':'')+
+
    '<form class="ac-fset" style="margin-top:18px" novalidate>'+
     '<div class="ac-fgrid">'+F.fields.map(field).join('')+'</div>'+
     '<div class="ac-submit"><button type="submit" class="btn btn-green">Подать заявку →</button>'+
