@@ -293,16 +293,8 @@ section{position:relative}
   display:flex;flex-direction:column;padding:clamp(18px,1.7vw,26px);
   border:1px solid var(--w-08);border-radius:var(--r);background:var(--coal);
   transition:border-color .35s,background .35s}
-/* выбранная карточка заливается мятным — той же светлой краской, что
-   плитки в блоке выше. Плотный зеленый оставлен плитке каталога в конце
-   ленты, иначе на экране два одинаковых пятна */
-.tgal-card.is-on{border-color:var(--mint);background:var(--mint)}
-.tgal-card.is-on .tgal-t{color:#06110B}
-.tgal-card.is-on .tgal-env{color:rgba(6,17,11,.58)}
-.tgal-card.is-on .tgal-lb{color:rgba(6,17,11,.72)}
-.tgal-card.is-on .tgal-list li{border-top-color:rgba(6,17,11,.20)}
-.tgal-card.is-on .tgal-list b{color:#06110B}
-.tgal-card.is-on .tgal-list em{color:rgba(6,17,11,.62)}
+/* выбранную карточку отмечает только зеленая рамка и фон на тон темнее */
+.tgal-card.is-on{border-color:var(--green);background:var(--ink)}
 .tgal-card:hover{border-color:var(--w-16)}
 .tgal-card.is-on:hover{border-color:var(--green)}
 .tgal-t{margin:0;font-size:clamp(20px,1.8vw,27px);line-height:1.06;letter-spacing:-.03em;
