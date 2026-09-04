@@ -1363,6 +1363,16 @@ dialog#taskDlg::backdrop,dialog#finDlg::backdrop,dialog#anDlg::backdrop,dialog#c
 .sup-bar{display:flex;align-items:center;justify-content:space-between;
   gap:clamp(16px,2.4vw,32px);flex-wrap:wrap;margin-bottom:18px}
 .sup-bar .sup-tabs{margin-bottom:0}
+/* плашка входа в реестр под карточками: слева призыв и строка условия,
+   справа кнопка. Поверхность светлее секции, чтобы полоса читалась */
+.sup-band{display:flex;align-items:center;justify-content:space-between;
+  gap:clamp(24px,4vw,64px);flex-wrap:wrap;
+  margin-top:clamp(26px,3vw,44px);padding:clamp(26px,3.2vw,48px);
+  border:1px solid var(--w-08);border-radius:var(--r);background:var(--coal)}
+.sup-band-t{margin:0;max-width:24ch;font-size:clamp(23px,2.5vw,36px);line-height:1.06;
+  letter-spacing:-.035em;font-weight:600;color:var(--white)}
+.sup-band-d{margin:14px 0 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
 .sup-actions{display:flex;align-items:center;justify-content:flex-end;
   gap:clamp(16px,2.4vw,36px);flex-wrap:wrap;margin-top:clamp(26px,3vw,40px)}
 .sup-list{border-top:1px solid var(--w-16)}
@@ -1974,15 +1984,11 @@ body.is-account > section:not(#account){display:none}
   <div class="sup-head">
     <h2 class="h1 sec-h">Поддержка<br>под ваши задачи</h2>
   </div>
-  <div class="sup-reg">
-    <p class="lead">Сначала робот попадает в реестр — после этого поддержка становится доступна</p>
-  </div>
   <div class="sup-bar">
     <div class="sup-tabs" role="tablist" aria-label="кому адресованы меры">
       <button type="button" class="sup-tab is-on" role="tab" data-aud="buy" aria-selected="true">Я заказчик</button>
       <button type="button" class="sup-tab" role="tab" data-aud="make" aria-selected="false">Я разработчик</button>
     </div>
-    <a class="btn btn-green" id="supCta" href="#account" data-newapp="reg">Включить робота в реестр →</a>
   </div>
   <div class="sup-grid" id="supGrid" data-aud="buy">
     <article class="sup-card" data-aud="buy">
@@ -2050,8 +2056,12 @@ body.is-account > section:not(#account){display:none}
       <p class="se-org">Департамент предпринимательства и инновационного развития Москвы</p>
     </article>
   </div>
-  <div class="sup-actions">
-    <a href="#finance" class="btn btn-dark">Узнать больше →</a>
+  <div class="sup-band">
+    <div>
+      <h3 class="sup-band-t">Подайте заявку на включение в реестр роботизированных систем</h3>
+      <p class="sup-band-d">Это обязательный шаг перед получением поддержки</p>
+    </div>
+    <button type="button" class="btn btn-green" data-newapp="reg">Подать заявку →</button>
   </div>
 </section>
 
